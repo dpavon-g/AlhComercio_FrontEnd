@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function DetailScreen({ route }) {
+export default function OfertasScreen({ route }) {
   const { otherParam } = route.params;
 
   return (

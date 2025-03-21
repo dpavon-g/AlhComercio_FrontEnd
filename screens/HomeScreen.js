@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator, FlatList, StyleSheet, RefreshControl } from 'react-native';
+import { Linking, TouchableOpacity, View, Text, ActivityIndicator, FlatList, StyleSheet, RefreshControl, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
 
@@ -11,7 +11,7 @@ export default function HomeScreen() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+      const response = await fetch('http://192.168.68.109:8000/api/getEstablecimientos');
       if (!response.ok) throw new Error('Error en la respuesta de la API');
       const jsonData = await response.json();
       setData(jsonData);
@@ -48,22 +48,27 @@ export default function HomeScreen() {
         data={data}
         keyExtractor={(item) => item.id.toString()}
         getItemLayout={(data, index) => ({
-            length: 100,
-            offset: 100 * index,
-            index,
+          length: 120,  // Ajusta la altura del ítem
+          offset: 120 * index,
+          index,
         })}
-        windowSize={5} // Reduce la cantidad de elementos montados fuera de pantalla
+        windowSize={5}
         initialNumToRender={10}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} colors={['blue']} />
         }
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Text style={styles.title}>{item.title}</Text>
+            <Image source={{ uri: item.Imagen }} style={styles.image} />
+            <Text style={styles.title}>{item.nombre}</Text>
+            <Text style={styles.address}>{item.direccion}</Text>
+            <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.telefono}`)}>
+              <Text style={styles.phone}>{item.telefono}</Text>
+            </TouchableOpacity>
             <Button
-              onPress={() => navigation.navigate('Detalles', { itemId: item.id, otherParam: item.body })}
+              onPress={() => navigation.navigate('Detalles', { itemId: item.id, otherParam: item.nombre })}
             >
-              Ver detalles
+              Ver Ofertas
             </Button>
           </View>
         )}
@@ -75,7 +80,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 0,
     backgroundColor: '#fff',
   },
   item: {
@@ -83,10 +88,29 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: '#f9f9f9',
     borderRadius: 5,
+    alignItems: 'center',  // Centrar contenido
+    paddingBottom: 20
+  },
+  image: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
+    marginBottom: 10,
   },
   title: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
   },
+  address: {
+    fontSize: 14,
+    color: 'gray',
+    marginBottom: 5,
+  },
+  phone: {
+    fontSize: 14,
+    color: 'blue',
+    marginBottom: 20,
+  },
+
 });
