@@ -11,7 +11,11 @@ export default function HomeScreen() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://192.168.68.109:8000/api/getEstablecimientos');
+      const response = await fetch('http://192.168.68.109:8000/api/getEstablecimientos', {
+        headers: {
+          'Accept-Charset': 'utf-8',
+        },
+      });
       if (!response.ok) throw new Error('Error en la respuesta de la API');
       const jsonData = await response.json();
       setData(jsonData);
@@ -59,7 +63,7 @@ export default function HomeScreen() {
         }
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Image source={{ uri: item.Imagen }} style={styles.image} />
+            <Image source={{ uri: item.imagen }} style={styles.image} />
             <Text style={styles.title}>{item.nombre}</Text>
             <Text style={styles.address}>{item.direccion}</Text>
             <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.telefono}`)}>
