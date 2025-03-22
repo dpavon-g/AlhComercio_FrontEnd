@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Linking, TouchableOpacity, View, Text, ActivityIndicator, FlatList, StyleSheet, RefreshControl, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
+import styles from '../styles/HomeStyle.js';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -80,41 +81,3 @@ export default function HomeScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 0,
-    backgroundColor: '#fff',
-  },
-  item: {
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 5,
-    alignItems: 'center',  // Centrar contenido
-    paddingBottom: 20
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  address: {
-    fontSize: 14,
-    color: 'gray',
-    marginBottom: 5,
-  },
-  phone: {
-    fontSize: 14,
-    color: 'blue',
-    marginBottom: 20,
-  },
-
-});

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import styles from '../styles/OfertasStyle.js';
 
 export default function OfertasScreen({ route }) {
   const { otherParam } = route.params;
@@ -11,10 +12,3 @@ export default function OfertasScreen({ route }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
