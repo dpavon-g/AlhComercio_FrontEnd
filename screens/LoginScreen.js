@@ -24,7 +24,7 @@ export default function LoginScreen({ navigation }) {
                     <Text style={[styles.textoLogin, styles.buttonText]}>Iniciar sesión</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.botones, styles.registerButton]} onPress={() => navigateToScreen('HomeTabs')}>
+                <TouchableOpacity style={[styles.botones, styles.registerButton]} onPress={() => navigation.navigate('SingUpScreen')}>
                     <Text style={[styles.textoLogin, styles.buttonText]}>Crear cuenta</Text>
                 </TouchableOpacity>
             </View>

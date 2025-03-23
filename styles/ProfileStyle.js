@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     logoutButton: {
-      backgroundColor: '#FF6347', // Color del botón
+      backgroundColor: 'grey',
       padding: 15,
       borderRadius: 5,
       alignItems: 'center',

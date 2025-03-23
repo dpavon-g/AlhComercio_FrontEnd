@@ -3,6 +3,7 @@ import { Linking, TouchableOpacity, View, Text, ActivityIndicator, FlatList, Sty
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
 import styles from '../styles/HomeStyle.js';
+import { API_URL } from '../config.js';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -12,7 +13,7 @@ export default function HomeScreen() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://192.168.68.109:8000/api/getEstablecimientos', {
+      const response = await fetch(API_URL + '/getNegocios', {
         headers: {
           'Accept-Charset': 'utf-8',
         },
@@ -42,7 +43,6 @@ export default function HomeScreen() {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="blue" />
-        <Text>Cargando...</Text>
       </View>
     );
   }
