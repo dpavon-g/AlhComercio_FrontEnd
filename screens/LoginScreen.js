@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     containerBotones: {
         alignItems: 'center',
         justifyContent: 'center',
+        width: '65%',
     },
     title: {
         fontSize: 24,
