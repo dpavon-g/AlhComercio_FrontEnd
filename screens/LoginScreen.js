@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
         marginTop: 150,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'white',
         padding: 20,
         borderRadius: 5,
     },
@@ -79,12 +78,13 @@ const styles = StyleSheet.create({
         width: '65%',
     },
     title: {
+        color: 'white',
         fontSize: 24,
         fontWeight: 'bold',
     },
     subtitle: {
         fontSize: 15,
-        color: 'gray',
+        color: 'white',
     },
     googleButton: {
         backgroundColor: '#DB4437',
