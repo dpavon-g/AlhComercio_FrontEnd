@@ -18,14 +18,9 @@ export default function LoginScreen({ navigation }) {
     const [password_confirmation, setpassword_confirmation] = useState('');
 
     function checkCampos() {
-        console.log('Campos:', { name, email, password, password_confirmation });
-        if (name === '' || email === '' || password === '' || password_confirmation === '') {
+        console.log('Campos:', {email, password});
+        if (email === '' || password === '') {
             Alert.alert('Error', 'Por favor, rellena todos los campos');
-            return false;
-        }
-
-        if (password !== password_confirmation) {
-            Alert.alert('Error', 'Las contraseñas no coinciden');
             return false;
         }
 
@@ -34,28 +29,17 @@ export default function LoginScreen({ navigation }) {
             Alert.alert('Error', 'El correo electrónico no tiene un formato válido');
             return false;
         }
-
-        const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%._*?&]{8,}$/;
-        if (!passwordRegex.test(password)) {
-            Alert.alert(
-                'Error',
-                'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, un número y un carácter especial'
-            );
-            return false;
-        }
         return true;
     }
 
-    const createUser = async () => {
+    const login = async () => {
         const userData = {
-            name,
             email,
             password,
-            password_confirmation
         };
     
         try {
-            const response = await fetch(API_URL + '/createUser', {
+            const response = await fetch(API_URL + '/checkLogin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -70,32 +54,27 @@ export default function LoginScreen({ navigation }) {
                 const errors = data.message;
                 if (errors) {
                     let errorMessages = '';
-                    for (const key in errors) {
-                        if (errors.hasOwnProperty(key)) {
-                            errorMessages += `${key}: ${errors[key].join(', ')}\n`;
-                        }
-                    }
+                    errorMessages = errors;
                     throw new Error(errorMessages);
                 } else {
-                    throw new Error(data.message || 'Hubo un problema con la creación del usuario');
+                    throw new Error(data.message || 'Hubo un error al iniciar sesión');
                 }
             }
-    
             return true;
         } catch (error) {
-            console.error('Error al crear el usuario:', error.message);
+            console.error('Hubo un error al iniciar sesión:', error.message);
             Alert.alert('Error', error.message);
             return false;
         }
     };
 
-    const handleSignUp = async () => {
+    const handleLogin = async () => {
         const validForm = checkCampos();
         if (!validForm) {
             return;
         }
 
-        const success = await createUser();
+        const success = await login();
         if (success) {
             navigateToScreen('HomeTabs');
         }
@@ -103,14 +82,8 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Crear cuenta</Text>
-            
-            <TextInput
-                style={styles.input}
-                placeholder="Nombre"
-                value={name}
-                onChangeText={setName}
-            />
+            <Text style={styles.title}>Iniciar Sesión</Text>
+
             <TextInput
                 style={styles.input}
                 placeholder="Correo electrónico"
@@ -125,13 +98,6 @@ export default function LoginScreen({ navigation }) {
                 value={password}
                 onChangeText={setPassword}
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Repetir contraseña"
-                secureTextEntry
-                value={password_confirmation}
-                onChangeText={setpassword_confirmation}
-            />
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={[styles.button, styles.secondaryButton]}
@@ -139,8 +105,8 @@ export default function LoginScreen({ navigation }) {
                     <Text style={[styles.buttonText, styles.secondaryButtonText]}>Volver al inicio</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-                    <Text style={styles.buttonText}>Registrarse</Text>
+                <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                    <Text style={styles.buttonText}>Acceder</Text>
                 </TouchableOpacity>
             </View>
         </View>

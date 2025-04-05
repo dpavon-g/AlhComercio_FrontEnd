@@ -27,11 +27,7 @@ export default function LoginScreen({ navigation }) {
                     <Text style={styles.subtitle}>Di hola al comercio Alhaurino</Text>
                 </View>
                 <View style={styles.containerBotones}>
-                    <TouchableOpacity style={[styles.botones, styles.googleButton]} onPress={() => navigateToScreen('HomeTabs')}>
-                        <Text style={[styles.textoGoogle, styles.buttonText]}>Iniciar sesión con Google</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={[styles.botones, styles.loginButton]} onPress={() => navigateToScreen('HomeTabs')}>
+                    <TouchableOpacity style={[styles.botones, styles.loginButton]} onPress={() => navigation.navigate('EnterScreen')}>
                         <Text style={[styles.textoLogin, styles.buttonText]}>Iniciar sesión</Text>
                     </TouchableOpacity>
 
@@ -52,12 +48,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#f5f5f5',
     },
     backgroundVideo: {
-        ...StyleSheet.absoluteFillObject, // Esto hace que el video cubra toda la pantalla
+        ...StyleSheet.absoluteFillObject,
         width: '100%',
         height: '100%',
     },
     overlay: {
-        position: 'absolute', // Esto coloca el contenido encima del video
+        position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
@@ -84,10 +80,6 @@ const styles = StyleSheet.create({
     },
     subtitle: {
         fontSize: 15,
-        color: 'white',
-    },
-    googleButton: {
-        backgroundColor: '#DB4437',
         color: 'white',
     },
     loginButton: {
