@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { API_URL } from '../config.js';
 import styles from '../styles/SingUpScreen.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({ navigation }) {
     const navigateToScreen = (screen) => {
@@ -12,13 +13,26 @@ export default function LoginScreen({ navigation }) {
         });
     };
 
-    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [password_confirmation, setpassword_confirmation] = useState('');
+    const [JWT_TOKEN, setJWT_TOKEN] = useState(null);
+
+   const obtenerToken = async () => {
+        const token = await AsyncStorage.getItem('token');
+        setJWT_TOKEN(token);
+    };
+
+    useEffect(() => {
+        obtenerToken();
+    }, []);
+
+    useEffect(() => {
+        if (JWT_TOKEN) {
+            navigateToScreen('HomeTabs');
+        }
+    }, [JWT_TOKEN]); // Este efecto se ejecuta cada vez que JWT_TOKEN cambia
 
     function checkCampos() {
-        console.log('Campos:', {email, password});
         if (email === '' || password === '') {
             Alert.alert('Error', 'Por favor, rellena todos los campos');
             return false;
@@ -48,8 +62,6 @@ export default function LoginScreen({ navigation }) {
             });
     
             const data = await response.json();
-            console.log('Respuesta del servidor:', data);
-    
             if (!response.ok) {
                 const errors = data.message;
                 if (errors) {
@@ -59,6 +71,10 @@ export default function LoginScreen({ navigation }) {
                 } else {
                     throw new Error(data.message || 'Hubo un error al iniciar sesión');
                 }
+            }
+            const jwt = data.jwt;
+            if (jwt) {
+                await AsyncStorage.setItem('token', jwt);
             }
             return true;
         } catch (error) {

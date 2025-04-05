@@ -3,13 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Video } from 'expo-av';
 
 export default function LoginScreen({ navigation }) {
-    const navigateToScreen = (screen) => {
-        navigation.reset({
-            index: 0,
-            routes: [{ name: screen }],
-        });
-    };
-
     return (
         <View style={styles.container}>
             <Video

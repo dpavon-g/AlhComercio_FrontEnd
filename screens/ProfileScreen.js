@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Asegúrate de importar AsyncStorage
 import styles from '../styles/ProfileStyle.js';
 
 export default function ProfileScreen({ navigation }) {
@@ -10,9 +11,21 @@ export default function ProfileScreen({ navigation }) {
     });
   };
 
-  const handleLogout = () => {
-    // Aquí iría tu lógica de cerrar sesión (por ejemplo, limpiar almacenamiento, tokens, etc.)
-    navigateToScreen('LoginScreen'); // Navega a la pantalla de login después de cerrar sesión
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('token');
+      
+      navigateToScreen('LoginScreen');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  };
+  const handleLogout2 = () => {
+    try {
+      navigateToScreen('LoginScreen');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
   };
 
   return (
@@ -21,6 +34,9 @@ export default function ProfileScreen({ navigation }) {
       
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.buttonText}>Cerrar sesión</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout2}>
+        <Text style={styles.buttonText}>Cerrar sesión2</Text>
       </TouchableOpacity>
     </View>
   );

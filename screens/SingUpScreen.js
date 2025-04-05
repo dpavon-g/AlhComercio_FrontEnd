@@ -70,17 +70,16 @@ export default function LoginScreen({ navigation }) {
                 const errors = data.message;
                 if (errors) {
                     let errorMessages = '';
-                    for (const key in errors) {
-                        if (errors.hasOwnProperty(key)) {
-                            errorMessages += `${key}: ${errors[key].join(', ')}\n`;
-                        }
-                    }
+                    errorMessages = errors;
                     throw new Error(errorMessages);
                 } else {
                     throw new Error(data.message || 'Hubo un problema con la creación del usuario');
                 }
             }
-    
+            const jwt = data.jwt;
+            if (jwt) {
+                await AsyncStorage.setItem('token', jwt);
+            }
             return true;
         } catch (error) {
             console.error('Error al crear el usuario:', error.message);
