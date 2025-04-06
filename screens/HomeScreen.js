@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Button } from '@react-navigation/elements';
 import styles from '../styles/HomeStyle.js';
 import { API_URL } from '../config.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -13,9 +14,16 @@ export default function HomeScreen() {
 
   const fetchData = async () => {
     try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        console.log("Token JWT no disponible.");
+        return;
+      }
       const response = await fetch(API_URL + '/getNegocios', {
+        method: 'GET',
         headers: {
           'Accept-Charset': 'utf-8',
+          'Authorization': `Bearer ${token}`,
         },
       });
       if (!response.ok) throw new Error('Error en la respuesta de la API');

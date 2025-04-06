@@ -30,7 +30,7 @@ export default function LoginScreen({ navigation }) {
         if (JWT_TOKEN) {
             navigateToScreen('HomeTabs');
         }
-    }, [JWT_TOKEN]); // Este efecto se ejecuta cada vez que JWT_TOKEN cambia
+    }, [JWT_TOKEN]);
 
     function checkCampos() {
         if (email === '' || password === '') {
@@ -53,7 +53,7 @@ export default function LoginScreen({ navigation }) {
         };
     
         try {
-            const response = await fetch(API_URL + '/checkLogin', {
+            const response = await fetch(API_URL + '/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,23 +62,22 @@ export default function LoginScreen({ navigation }) {
             });
     
             const data = await response.json();
+
             if (!response.ok) {
-                const errors = data.message;
-                if (errors) {
-                    let errorMessages = '';
-                    errorMessages = errors;
-                    throw new Error(errorMessages);
+                let errorMessages = '';
+                if (data && typeof data === 'object') {
+                    errorMessages = data.error || data.message 
                 } else {
-                    throw new Error(data.message || 'Hubo un error al iniciar sesión');
+                    errorMessages = 'Hubo un error al iniciar sesión';
                 }
+                throw new Error(errorMessages);
             }
-            const jwt = data.jwt;
+            const jwt = data.token;
             if (jwt) {
                 await AsyncStorage.setItem('token', jwt);
             }
             return true;
         } catch (error) {
-            console.error('Hubo un error al iniciar sesión:', error.message);
             Alert.alert('Error', error.message);
             return false;
         }

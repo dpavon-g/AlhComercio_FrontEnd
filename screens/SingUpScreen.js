@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { API_URL } from '../config.js';
 import styles from '../styles/SingUpScreen.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({ navigation }) {
     const navigateToScreen = (screen) => {
@@ -55,7 +56,7 @@ export default function LoginScreen({ navigation }) {
         };
     
         try {
-            const response = await fetch(API_URL + '/createUser', {
+            const response = await fetch(API_URL + '/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -63,26 +64,52 @@ export default function LoginScreen({ navigation }) {
                 body: JSON.stringify(userData),
             });
     
-            const data = await response.json();
-            console.log('Respuesta del servidor:', data);
-    
-            if (!response.ok) {
-                const errors = data.message;
-                if (errors) {
-                    let errorMessages = '';
-                    errorMessages = errors;
-                    throw new Error(errorMessages);
-                } else {
-                    throw new Error(data.message || 'Hubo un problema con la creación del usuario');
-                }
+            let data;
+            try {
+                data = await response.json();
+            } catch (jsonError) {
+                data = null;
             }
-            const jwt = data.jwt;
+            
+            if (!response.ok) {
+                let errorMessages = '';
+    
+                const fieldLabels = {
+                    email: 'Correo electrónico',
+                    password: 'Contraseña',
+                    name: 'Nombre',
+                    password_confirmation: 'Confirmación de contraseña'
+                };
+    
+
+
+                if (
+                    typeof data === 'object' &&
+                    data !== null &&
+                    !Array.isArray(data) &&
+                    Object.keys(data).length > 0
+                ) {
+                    errorMessages = Object.entries(data)
+                        .map(([field, messages]) => {
+                            const label = fieldLabels[field] || field;
+                            return `${label}: ${messages.join(', ')}`;
+                        })
+                        .join('\n');
+                } else {
+                    errorMessages = 'Hubo un problema con la creación del usuario';
+                }
+    
+                throw new Error(errorMessages);
+            }
+    
+            const jwt = data.token;
             if (jwt) {
                 await AsyncStorage.setItem('token', jwt);
+                console.log('Token guardado:', jwt);
             }
             return true;
         } catch (error) {
-            console.error('Error al crear el usuario:', error.message);
+            // console.error('Error al crear el usuario:', error.message);
             Alert.alert('Error', error.message);
             return false;
         }
@@ -103,7 +130,7 @@ export default function LoginScreen({ navigation }) {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Crear cuenta</Text>
-            
+
             <TextInput
                 style={styles.input}
                 placeholder="Nombre"
