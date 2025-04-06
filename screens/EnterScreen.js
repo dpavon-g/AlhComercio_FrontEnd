@@ -76,7 +76,7 @@ export default function LoginScreen({ navigation }) {
             if (jwt) {
                 await AsyncStorage.setItem('token', jwt);
             }
-            return true;
+            return data;
         } catch (error) {
             Alert.alert('Error', error.message);
             return false;
@@ -88,9 +88,11 @@ export default function LoginScreen({ navigation }) {
         if (!validForm) {
             return;
         }
-
-        const success = await login();
-        if (success) {
+    
+        const user = await login();
+        if (user) {
+            // Puedes usar la info del usuario si la necesitas
+            console.log('Usuario logueado:', user);
             navigateToScreen('HomeTabs');
         }
     };

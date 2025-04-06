@@ -1,7 +1,8 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Asegúrate de importar AsyncStorage
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../styles/ProfileStyle.js';
+import { API_URL } from '../config.js';
 
 export default function ProfileScreen({ navigation }) {
   const navigateToScreen = (screen) => {
@@ -11,33 +12,113 @@ export default function ProfileScreen({ navigation }) {
     });
   };
 
-  const handleLogout = async () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchData = async () => {
     try {
-      await AsyncStorage.removeItem('token');
-      
-      navigateToScreen('LoginScreen');
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        console.log("Token JWT no disponible.");
+        navigation.navigate('LoginScreen');
+        return;
+      }
+      const response = await fetch(`${API_URL}/getUser`, {
+        method: 'GET',
+        headers: {
+          'Accept-Charset': 'utf-8',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error('Error en la respuesta de la API');
+      const jsonData = await response.json();
+      setData(jsonData);
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      await AsyncStorage.removeItem('token');
+      navigation.navigate('LoginScreen');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
   };
-  const handleLogout2 = () => {
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setData(null);
+    fetchData();
+  };
+
+  const handleLogout = async () => {
     try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        console.log('No hay token para cerrar sesión.');
+        return;
+      }
+  
+      // Llamada a la API para cerrar sesión en el backend
+      const response = await fetch(`${API_URL}/logout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+  
+      if (!response.ok) {
+        console.warn('La API de logout devolvió un error:', response.status);
+      } else {
+        console.log('Sesión cerrada correctamente en el servidor.');
+      }
+  
+      // Eliminamos el token localmente
+      await AsyncStorage.removeItem('token');
+  
+      // Navegamos a la pantalla de Login
       navigateToScreen('LoginScreen');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
   };
 
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="blue" />
+      </View>
+    );
+  }
+
+  const user = data?.user;
+
   return (
-    <View style={styles.container}>
-      <Text>Perfil</Text>
-      
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+    >
+      <Text style={styles.title}>Perfil</Text>
+
+      {user ? (
+        <>
+          <Text style={styles.label}>Nombre:</Text>
+          <Text style={styles.value}>{user.name}</Text>
+
+          <Text style={styles.label}>Email:</Text>
+          <Text style={styles.value}>{user.email}</Text>
+
+        </>
+      ) : (
+        <Text></Text>
+      )}
+
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.buttonText}>Cerrar sesión</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout2}>
-        <Text style={styles.buttonText}>Cerrar sesión2</Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }

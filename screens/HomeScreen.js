@@ -17,6 +17,7 @@ export default function HomeScreen() {
       const token = await AsyncStorage.getItem('token');
       if (!token) {
         console.log("Token JWT no disponible.");
+        navigation.navigate('LoginScreen');
         return;
       }
       const response = await fetch(API_URL + '/getNegocios', {
@@ -30,7 +31,8 @@ export default function HomeScreen() {
       const jsonData = await response.json();
       setData(jsonData);
     } catch (error) {
-      console.error(error);
+      await AsyncStorage.removeItem('token');
+      navigation.navigate('LoginScreen');
     } finally {
       setLoading(false);
       setRefreshing(false);
