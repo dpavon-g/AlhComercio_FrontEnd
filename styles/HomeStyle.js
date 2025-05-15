@@ -35,6 +35,28 @@ const styles = StyleSheet.create({
     color: 'blue',
     marginBottom: 20,
   },
+  floatingButton: {
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 20,
+    bottom: 20,
+    backgroundColor: 'white',
+    borderRadius: 30,
+    elevation: 8, // para Android
+    shadowColor: '#000', // para iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+  },
+  floatingButtonText: {
+    color: 'blue',
+    fontSize: 30,
+    lineHeight: 34,
+    fontWeight: 'bold',
+  },
 });
 
 export default styles;

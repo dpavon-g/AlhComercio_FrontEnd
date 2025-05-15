@@ -5,6 +5,7 @@ import { Button } from '@react-navigation/elements';
 import styles from '../styles/HomeStyle.js';
 import { API_URL } from '../config.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -39,9 +40,11 @@ export default function HomeScreen() {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      handleRefresh(); // Esto limpiará y recargará
+    }, [])
+  );
 
   const handleRefresh = () => {
     setRefreshing(true);
@@ -81,13 +84,21 @@ export default function HomeScreen() {
               <Text style={styles.phone}>{item.telefono}</Text>
             </TouchableOpacity>
             <Button
-              onPress={() => navigation.navigate('Detalles', { itemId: item.id, otherParam: item.nombre })}
+              onPress={() => navigation.navigate('Detalles', { negocio: item })
+            }
             >
-              Ver Ofertas
+              Más Información
             </Button>
           </View>
         )}
       />
+      <TouchableOpacity
+        style={styles.floatingButton}
+        onPress={() => navigation.navigate('FormularioScreen')}
+      >
+        <Text style={styles.floatingButtonText}>+</Text>
+      </TouchableOpacity>
+
     </View>
   );
 }

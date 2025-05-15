@@ -34,4 +34,41 @@ export default StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 30,
+    marginBottom: 10,
+    color: '#333',
+  },
+  
+  businessCard: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 15,
+  },
+  
+  businessImage: {
+    width: '100%',
+    height: 150,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  
+  businessName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  
+  businessAddress: {
+    fontSize: 14,
+    color: '#666',
+  },
+  
+  businessPhone: {
+    fontSize: 14,
+    color: '#444',
+  },
+  
 });

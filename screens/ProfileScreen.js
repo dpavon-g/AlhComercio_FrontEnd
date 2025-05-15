@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, RefreshControl, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../styles/ProfileStyle.js';
@@ -60,8 +60,7 @@ export default function ProfileScreen({ navigation }) {
         console.log('No hay token para cerrar sesión.');
         return;
       }
-  
-      // Llamada a la API para cerrar sesión en el backend
+
       const response = await fetch(`${API_URL}/logout`, {
         method: 'POST',
         headers: {
@@ -69,17 +68,14 @@ export default function ProfileScreen({ navigation }) {
           'Authorization': `Bearer ${token}`,
         },
       });
-  
+
       if (!response.ok) {
         console.warn('La API de logout devolvió un error:', response.status);
       } else {
         console.log('Sesión cerrada correctamente en el servidor.');
       }
-  
-      // Eliminamos el token localmente
+
       await AsyncStorage.removeItem('token');
-  
-      // Navegamos a la pantalla de Login
       navigateToScreen('LoginScreen');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
@@ -111,9 +107,23 @@ export default function ProfileScreen({ navigation }) {
           <Text style={styles.label}>Email:</Text>
           <Text style={styles.value}>{user.email}</Text>
 
+          {user.negocios && user.negocios.length > 0 && (
+            <>
+              <Text style={styles.sectionTitle}>Negocios</Text>
+
+              {user.negocios.map((negocio) => (
+                <View key={negocio.id} style={styles.businessCard}>
+                  <Image source={{ uri: negocio.imagen }} style={styles.businessImage} />
+                  <Text style={styles.businessName}>{negocio.nombre}</Text>
+                  <Text style={styles.businessAddress}>{negocio.direccion}</Text>
+                  <Text style={styles.businessPhone}>{negocio.telefono}</Text>
+                </View>
+              ))}
+            </>
+          )}
         </>
       ) : (
-        <Text></Text>
+        <Text>No se encontraron datos del usuario.</Text>
       )}
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>

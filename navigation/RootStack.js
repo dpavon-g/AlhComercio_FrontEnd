@@ -5,6 +5,7 @@ import OfertasScreen from '../screens/OfertasScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SingUpScreen from '../screens/SingUpScreen';
 import EnterScreen from '../screens/EnterScreen';
+import FormularioScreen from '../screens/FormularioNegocioScreen.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ export default function RootStack() {
       <Stack.Screen name="EnterScreen" component={EnterScreen} options={{ headerShown: false }} />
       <Stack.Screen name="HomeTabs" component={BottomTabs} options={{ headerShown: false }} />
       <Stack.Screen name="Detalles" component={OfertasScreen} options={{ title: 'Ofertas' }} />
+      <Stack.Screen name="FormularioScreen" component={FormularioScreen} options={{ title: 'Nuevo comercio' }} />
     </Stack.Navigator>
   );
 }
