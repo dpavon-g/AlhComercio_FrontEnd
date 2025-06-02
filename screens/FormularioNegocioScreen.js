@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config.js';
@@ -12,6 +12,7 @@ export default function FormularioScreen() {
   const [direccion, setDireccion] = useState('');
   const [telefono, setTelefono] = useState('');
   const [url, setUrl] = useState('');
+  const [loading, setLoading] = useState(false); 
 
   const handleSubmit = async () => {
     if (!nombre || !direccion || !telefono || !url) {
@@ -19,9 +20,12 @@ export default function FormularioScreen() {
       return;
     }
 
+    setLoading(true);
+
     try {
       const token = await AsyncStorage.getItem('token');
       if (!token) {
+        setLoading(false);
         navigation.navigate('LoginScreen');
         return;
       }
@@ -43,15 +47,18 @@ export default function FormularioScreen() {
       if (!response.ok) throw new Error('Error al crear el negocio');
 
       Alert.alert('Éxito', 'Negocio creado correctamente');
-      navigation.goBack(); // Regresa a la pantalla anterior
+      navigation.goBack();
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'No se pudo crear el negocio');
+    } finally {
+      setLoading(false); 
     }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      
       <Text style={styles.label}>Nombre</Text>
       <TextInput style={styles.input} value={nombre} onChangeText={setNombre} placeholder="Nombre del negocio" />
 
@@ -64,9 +71,12 @@ export default function FormularioScreen() {
       <Text style={styles.label}>URL de Imagen</Text>
       <TextInput style={styles.input} value={url} onChangeText={setUrl} placeholder="https://..." keyboardType="url" />
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading}>
         <Text style={styles.buttonText}>Crear Negocio</Text>
       </TouchableOpacity>
+      {loading && (
+        <ActivityIndicator size="large" color="#007bff" style={{ marginTop: 20 }} />
+      )}
     </ScrollView>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { API_URL } from '../config.js';
 import styles from '../styles/SingUpScreen.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,6 +16,7 @@ export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [JWT_TOKEN, setJWT_TOKEN] = useState(null);
+    const [loading, setLoading] = useState(false);
 
    const obtenerToken = async () => {
         const token = await AsyncStorage.getItem('token');
@@ -51,7 +52,9 @@ export default function LoginScreen({ navigation }) {
             email,
             password,
         };
-    
+        
+        setLoading(true);
+
         try {
             const response = await fetch(API_URL + '/login', {
                 method: 'POST',
@@ -80,6 +83,8 @@ export default function LoginScreen({ navigation }) {
         } catch (error) {
             Alert.alert('Error', error.message);
             return false;
+        } finally {
+            setLoading(false); 
         }
     };
 
@@ -91,7 +96,6 @@ export default function LoginScreen({ navigation }) {
     
         const user = await login();
         if (user) {
-            // Puedes usar la info del usuario si la necesitas
             console.log('Usuario logueado:', user);
             navigateToScreen('HomeTabs');
         }
@@ -126,6 +130,9 @@ export default function LoginScreen({ navigation }) {
                     <Text style={styles.buttonText}>Acceder</Text>
                 </TouchableOpacity>
             </View>
+            {loading && (
+                    <ActivityIndicator size="large" color="#007bff" style={{ marginTop: 20 }} />
+                  )}
         </View>
     );
 }

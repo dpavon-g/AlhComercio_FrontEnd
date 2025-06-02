@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { API_URL } from '../config.js';
 import styles from '../styles/SingUpScreen.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,6 +17,8 @@ export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [password_confirmation, setpassword_confirmation] = useState('');
+    const [loading, setLoading] = useState(false);
+
 
     function checkCampos() {
         console.log('Campos:', { name, email, password, password_confirmation });
@@ -54,7 +56,9 @@ export default function LoginScreen({ navigation }) {
             password,
             password_confirmation
         };
-    
+
+        setLoading(true);
+
         try {
             const response = await fetch(API_URL + '/register', {
                 method: 'POST',
@@ -112,6 +116,8 @@ export default function LoginScreen({ navigation }) {
             // console.error('Error al crear el usuario:', error.message);
             Alert.alert('Error', error.message);
             return false;
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -169,6 +175,9 @@ export default function LoginScreen({ navigation }) {
                     <Text style={styles.buttonText}>Registrarse</Text>
                 </TouchableOpacity>
             </View>
+            {loading && (
+                    <ActivityIndicator size="large" color="#007bff" style={{ marginTop: 20 }} />
+                  )}
         </View>
     );
 }

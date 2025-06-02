@@ -107,6 +107,9 @@ export default function ProfileScreen({ navigation }) {
           <Text style={styles.label}>Email:</Text>
           <Text style={styles.value}>{user.email}</Text>
 
+          <Text style={styles.label}>Acumulados:</Text>
+          <Text style={styles.value}>{user.coins} €</Text>
+
           {user.negocios && user.negocios.length > 0 && (
             <>
               <Text style={styles.sectionTitle}>Negocios</Text>
