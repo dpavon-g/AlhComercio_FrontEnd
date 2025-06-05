@@ -43,7 +43,7 @@ export default function HomeScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
-      handleRefresh(); // Esto limpiará y recargará
+      handleRefresh();
     }, [])
   );
 
@@ -67,7 +67,7 @@ export default function HomeScreen() {
         data={data}
         keyExtractor={(item) => item.id.toString()}
         getItemLayout={(data, index) => ({
-          length: 120,  // Ajusta la altura del ítem
+          length: 120,
           offset: 120 * index,
           index,
         })}

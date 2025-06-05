@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({ navigation }) {
     const navigateToScreen = (screen) => {
-        console.log('Navegando a:', screen);
         navigation.reset({
             index: 0,
             routes: [{ name: screen }],
@@ -96,7 +95,6 @@ export default function LoginScreen({ navigation }) {
     
         const user = await login();
         if (user) {
-            console.log('Usuario logueado:', user);
             navigateToScreen('HomeTabs');
         }
     };

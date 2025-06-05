@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({ navigation }) {
     const navigateToScreen = (screen) => {
-        console.log('Navegando a:', screen);
         navigation.reset({
             index: 0,
             routes: [{ name: screen }],
@@ -21,7 +20,6 @@ export default function LoginScreen({ navigation }) {
 
 
     function checkCampos() {
-        console.log('Campos:', { name, email, password, password_confirmation });
         if (name === '' || email === '' || password === '' || password_confirmation === '') {
             Alert.alert('Error', 'Por favor, rellena todos los campos');
             return false;
@@ -113,7 +111,6 @@ export default function LoginScreen({ navigation }) {
             }
             return true;
         } catch (error) {
-            // console.error('Error al crear el usuario:', error.message);
             Alert.alert('Error', error.message);
             return false;
         } finally {

@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginTop: 20,
     marginRight: 20,
-    alignSelf: "flex-end", // Esto hace que el botón solo ocupe el ancho necesario
+    alignSelf: "flex-end",
   },
   botonEliminarText: {
     color: "white",
@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
   tachado: {
     textDecorationLine: "line-through",
   },
-
 
   precioOferta: {
     fontSize: 16,
