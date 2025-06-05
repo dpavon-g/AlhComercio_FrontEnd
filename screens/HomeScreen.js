@@ -28,7 +28,8 @@ export default function HomeScreen() {
           'Authorization': `Bearer ${token}`,
         },
       });
-      if (!response.ok) throw new Error('Error en la respuesta de la API');
+      if (!response.ok) 
+        throw new Error('Error en la respuesta de la API');
       const jsonData = await response.json();
       setData(jsonData);
     } catch (error) {
@@ -94,7 +95,7 @@ export default function HomeScreen() {
       />
       <TouchableOpacity
         style={styles.floatingButton}
-        onPress={() => navigation.navigate('FormularioScreen')}
+        onPress={() => navigation.navigate('FormularioNegocioScreen')}
       >
         <Text style={styles.floatingButtonText}>+</Text>
       </TouchableOpacity>

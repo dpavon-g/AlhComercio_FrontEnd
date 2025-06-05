@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, ActivityIndicator, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config.js';
@@ -58,7 +58,10 @@ export default function FormularioScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      
+      <Image 
+                  source={require('../assets/imagenCreateNegocio.png')}
+                  style={{ width: '100%', height: 400, resizeMode: 'cover', marginBottom: 20 }}
+        />
       <Text style={styles.label}>Nombre</Text>
       <TextInput style={styles.input} value={nombre} onChangeText={setNombre} placeholder="Nombre del negocio" />
 
