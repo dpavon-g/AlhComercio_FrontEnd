@@ -86,7 +86,7 @@ export default function ProfileScreen({ navigation }) {
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="blue" />
+        <ActivityIndicator size="large" color="#1E90FF" />
       </View>
     );
   }

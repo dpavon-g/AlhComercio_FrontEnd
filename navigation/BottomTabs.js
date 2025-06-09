@@ -14,7 +14,7 @@ export default function BottomTabs() {
           let iconName = route.name === 'AlhComercio' ? 'home-outline' : 'person-outline';
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: 'blue',
+        tabBarActiveTintColor: '#1E90FF',
         tabBarInactiveTintColor: 'gray',
         headerStyle: { backgroundColor: 'white' },
       })}

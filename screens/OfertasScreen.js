@@ -87,10 +87,98 @@ export default function OfertasScreen({ route }) {
                 "Negocio eliminado",
                 "El negocio se ha eliminado correctamente."
               );
-              navigation.goBack(); // Vuelve a la pantalla anterior
+              navigation.goBack();
             } catch (error) {
               console.log(error);
               Alert.alert("Error", "No se pudo eliminar el negocio.");
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const handleActivarOferta = (ofertaId) => {
+    Alert.alert(
+      "Vas a activar esta oferta",
+      "¿Estás seguro de que deseas activar esta oferta?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "activar",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const token = await AsyncStorage.getItem("token");
+              if (!token) {
+                navigation.navigate("LoginScreen");
+                return;
+              }
+              const response = await fetch(
+                API_URL + `/activarOferta?id=${ofertaId}`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Accept-Charset": "utf-8",
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+              if (!response.ok) throw new Error("Error al activar la oferta");
+              else {
+                Alert.alert(
+                  "Oferta activada",
+                  "La oferta se ha activado correctamente"
+                );
+              }
+            } catch (error) {
+              console.log(error);
+              Alert.alert("Error", "No se pudo activar la oferta.");
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const handleEliminarOferta = (ofertaId) => {
+    Alert.alert(
+      "Eliminar oferta",
+      "¿Estás seguro de que deseas eliminar esta oferta?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const token = await AsyncStorage.getItem("token");
+              if (!token) {
+                navigation.navigate("LoginScreen");
+                return;
+              }
+              const response = await fetch(
+                API_URL + `/eliminarOferta?id=${ofertaId}`,
+                {
+                  method: "DELETE",
+                  headers: {
+                    "Accept-Charset": "utf-8",
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+              if (!response.ok) throw new Error("Error al eliminar la oferta");
+              else {
+                Alert.alert(
+                  "Oferta eliminada",
+                  "La oferta se ha eliminado correctamente"
+                );
+              }
+              handleRefresh();
+            } catch (error) {
+              console.log(error);
+              Alert.alert("Error", "No se pudo eliminar la oferta.");
+              handleRefresh();
             }
           },
         },
@@ -113,7 +201,7 @@ export default function OfertasScreen({ route }) {
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="blue" />
+        <ActivityIndicator size="large" color="#1E90FF" />
       </View>
     );
   }
@@ -127,73 +215,91 @@ export default function OfertasScreen({ route }) {
   }
 
   return (
-  <View style={{ flex: 1 }}>
-    <FlatList
-      style={{ flex: 1 }}
-      contentContainerStyle={{ paddingBottom: 120 }}
-      data={data.ofertas || []}
-      keyExtractor={(item, index) => index.toString()}
-      ListHeaderComponent={
-        <View>
-          {data.admin && (
-            <TouchableOpacity
-              onPress={handleEliminarNegocio}
-              style={styles.botonEliminar}
-            >
-              <Text style={styles.botonEliminarText}>Eliminar negocio</Text>
-            </TouchableOpacity>
-          )}
-          <View style={styles.item}>
-            <Image source={{ uri: negocio.imagen }} style={styles.image} />
-            <Text style={styles.title}>{negocio.nombre}</Text>
-            <Text style={styles.address}>{negocio.direccion}</Text>
-            <TouchableOpacity
-              onPress={() => Linking.openURL(`tel:${negocio.telefono}`)}
-            >
-              <Text style={styles.phone}>{negocio.telefono}</Text>
-            </TouchableOpacity>
-            <Text style={styles.title}>Ofertas disponibles:</Text>
+    <View style={{ flex: 1 }}>
+      <FlatList
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 120 }}
+        data={data.ofertas || []}
+        keyExtractor={(item, index) => index.toString()}
+        ListHeaderComponent={
+          <View>
+            {data.admin && (
+              <TouchableOpacity
+                onPress={handleEliminarNegocio}
+                style={styles.botonEliminar}
+              >
+                <Text style={styles.botonEliminarText}>Eliminar negocio</Text>
+              </TouchableOpacity>
+            )}
+            <View style={styles.item}>
+              <Image source={{ uri: negocio.imagen }} style={styles.image} />
+              <Text style={styles.title}>{negocio.nombre}</Text>
+              <Text style={styles.address}>{negocio.direccion}</Text>
+              <TouchableOpacity
+                onPress={() => Linking.openURL(`tel:${negocio.telefono}`)}
+              >
+                <Text style={styles.phone}>{negocio.telefono}</Text>
+              </TouchableOpacity>
+              <Text style={styles.title}>Ofertas disponibles:</Text>
+            </View>
           </View>
-        </View>
-      }
-      renderItem={({ item }) => (
-        <View style={styles.ofertaCard}>
-          <Image source={{ uri: item.imagen }} style={styles.ofertaImagen} />
-          <View style={styles.ofertaInfo}>
-            <Text style={styles.ofertaNombre}>{item.nombre}</Text>
-            <Text style={styles.precioOriginal}>
-              Precio original:{" "}
-              <Text style={styles.tachado}>{item.precio_original}€</Text>
-            </Text>
-            <Text style={styles.precioOferta}>
-              Oferta: {item.precio_oferta}€
-            </Text>
-          </View>
-        </View>
-      )}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={handleRefresh}
-          colors={["blue"]}
-        />
-      }
-    />
-
-    {/* Botón flotante al final */}
-    {data.admin && (
-      <TouchableOpacity
-        style={styles.botonFlotante}
-        onPress={() =>
-          navigation.navigate("FormularioOfertaScreen", {
-            negocioId: negocio.id,
-          })
         }
-      >
-        <Text style={styles.botonFlotanteText}>Crear Oferta</Text>
-      </TouchableOpacity>
-    )}
-  </View>
-);
+        renderItem={({ item }) => (
+          <View style={styles.ofertaCard}>
+            <Image source={{ uri: item.imagen }} style={styles.ofertaImagen} />
+            <View style={styles.ofertaInfo}>
+              <Text style={styles.ofertaNombre}>{item.nombre}</Text>
+              <Text style={styles.precioOriginal}>
+                Precio original:{" "}
+                <Text style={styles.tachado}>{item.precio_original}€</Text>
+              </Text>
+              <Text style={styles.precioOferta}>
+                Oferta: {item.precio_oferta}€
+              </Text>
 
+              <View style={styles.botonesAdminOferta}>
+                <TouchableOpacity
+                  style={styles.botonOferta}
+                  onPress={() => handleActivarOferta(item.id)}
+                >
+                  <Text style={styles.botonOfertaText}>Activar oferta</Text>
+                </TouchableOpacity>
+
+                {data.admin && (
+                  <TouchableOpacity
+                    style={[styles.botonOferta, styles.botonEliminarOferta]}
+                    onPress={() => handleEliminarOferta(item.id)}
+                  >
+                    <Text style={styles.botonDelOfertaText}>
+                      Eliminar oferta
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+          </View>
+        )}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            colors={["#1E90FF"]}
+          />
+        }
+      />
+
+      {data.admin && (
+        <TouchableOpacity
+          style={styles.botonFlotante}
+          onPress={() =>
+            navigation.navigate("FormularioOfertaScreen", {
+              negocioId: negocio.id,
+            })
+          }
+        >
+          <Text style={styles.botonFlotanteText}>Crear Oferta</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
 }

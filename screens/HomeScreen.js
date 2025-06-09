@@ -56,7 +56,7 @@ export default function HomeScreen() {
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="blue" />
+        <ActivityIndicator size="large" color="#1E90FF" />
       </View>
     );
   }
@@ -74,7 +74,7 @@ export default function HomeScreen() {
         windowSize={5}
         initialNumToRender={10}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} colors={['blue']} />
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} colors={['#1E90FF']} />
         }
         renderItem={({ item }) => (
           <View style={styles.item}>

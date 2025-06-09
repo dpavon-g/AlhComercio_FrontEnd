@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   phone: {
     fontSize: 14,
-    color: 'blue',
+    color: '#1E90FF',
     marginBottom: 20,
   },
   floatingButton: {
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   floatingButtonText: {
-    color: 'blue',
+    color: '#1E90FF',
     fontSize: 30,
     lineHeight: 34,
     fontWeight: 'bold',

@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   phone: {
     fontSize: 16,
-    color: "blue",
+    color: "#1E90FF",
     marginBottom: 10,
     textAlign: "center",
   },
@@ -51,11 +51,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   botonFlotanteText: {
-    color: "blue",
+    color: "#1E90FF",
     fontWeight: "bold",
     fontSize: 16,
   },
-  
+
   botonEliminar: {
     backgroundColor: "#e74c3c",
     paddingVertical: 12,
@@ -115,6 +115,37 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 4,
   },
+
+  botonesAdminOferta: {
+    flexDirection: "row",
+    marginTop: 10,
+    justifyContent: "flex-end",
+  },
+
+  botonOferta: {
+    padding: 15,
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#1E90FF",
+    borderRadius: 30,
+    marginRight: 10,
+  },
+
+  botonEliminarOferta: {
+    borderWidth: 0,
+    backgroundColor: "#e74c3c",
+  },
+
+  botonOfertaText: {
+    color: "#1E90FF",
+    fontWeight: "bold",
+  },
+
+  botonDelOfertaText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+
 });
 
 export default styles;
